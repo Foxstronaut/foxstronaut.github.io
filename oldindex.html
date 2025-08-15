@@ -1,268 +1,99 @@
-
-
-Here's the complete improved code with a Ubuntu-like portfolio website and a contact form that sends messages to your Discord webhook:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Ubuntu Style</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Ubuntu', sans-serif;
-        }
-
-        body {
-            background-color: #2c2c2c;
-            color: #ffffff;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            background-color: #333333;
-            padding: 10px;
-            border-radius: 5px 5px 0 0;
-            margin-bottom: 20px;
-        }
-
-        .title {
-            color: #ff6600;
-            font-size: 24px;
-        }
-
-        .sidebar {
-            background-color: #333333;
-            width: 200px;
-            min-height: 600px;
-            padding: 20px;
-            float: left;
-            border-radius: 0 0 5px 5px;
-        }
-
-        .main-content {
-            margin-left: 220px;
-            padding: 20px;
-        }
-
-        .section {
-            background-color: #333333;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-
-        .section-header {
-            color: #ff6600;
-            font-size: 18px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #404040;
-        }
-
-        .nav-buttons {
-            list-style: none;
-        }
-
-        .nav-buttons li {
-            margin-bottom: 10px;
-        }
-
-        .nav-buttons a {
-            color: #ffffff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-buttons a:hover {
-            color: #ff6600;
-        }
-
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 75px;
-            margin: 20px auto;
-            border: 5px solid #404040;
-        }
-
-        .social-links {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .social-links a {
-            color: #ffffff;
-            margin: 0 10px;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-
-        .social-links a:hover {
-            color: #ff6600;
-        }
-
-        .portfolio-item {
-            background-color: #404040;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-
-        .portfolio-item img {
-            width: 100px;
-            height: 100px;
-            border-radius: 5px;
-            margin-right: 15px;
-        }
-
-        .portfolio-item h3 {
-            color: #ff6600;
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            padding: 10px;
-            background-color: #404040;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 4px;
-            font-family: 'Ubuntu', sans-serif;
-        }
-
-        .contact-form textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .contact-form button {
-            background-color: #ff6600;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-family: 'Ubuntu', sans-serif;
-        }
-
-        .contact-form button:hover {
-            background-color: #cc5500;
-        }
-
-        .form-response {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .success {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .error {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .loading {
-            background-color: #ff6600;
-            color: white;
-        }
-
-        .about-content {
-            line-height: 1.6;
-            text-align: justify;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate {
-            animation: fadeIn 0.5s ease-out;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Turquoise OS — Portfolio</title>
+<style>
+  :root{
+    --bg: #0b1014;
+    --panel: #11181f;
+    --accent: #2bd4c7;
+    --text: #e6f1f0;
+    --muted: #94a3b8;
+    --gap: 14px;
+  }
+  *{ box-sizing: border-box; }
+  html, body{ height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: sans-serif; }
+  .app-shell{ display: grid; grid-template-columns: 280px 1fr; height: 100%; }
+  .sidebar{ background: var(--panel); padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+  .desktop{ position: relative; height: 100%; padding: var(--gap); overflow: auto; }
+  .grid{ display: grid; gap: var(--gap); height: 100%; }
+  .window{ background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.06); border-radius: 8px; display:flex; flex-direction: column; }
+  .win-header{ display:flex; align-items:center; justify-content:space-between; padding: 8px; background: rgba(43,212,199,.08); }
+  .win-body{ flex:1; padding: 12px; overflow:auto; font-size: 1rem; }
+  .win-body img{ max-width: 100%; height: auto; }
+  .close{ background:none; border:none; color:var(--text); font-size: 1.2rem; cursor:pointer; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="title">Portfolio</h1>
-        </div>
-        
-        <div class="sidebar animate">
-            <nav class="nav-buttons">
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="far fa-envelope"></i></a>
-            </div>
-        </div>
-
-        <div class="main-content animate">
-            <div class="section" id="about">
-                <h2 class="section-header">About Me</h2>
-                <img src="your-profile-image.jpg" alt="Profile" class="profile-image">
-                <div class="about-content">
-                    <p>Hi! I'm [Your Name], a passionate developer and designer with expertise in [your skills].</p>
-                    <p>I create beautiful and functional websites, applications, and other digital experiences.</p>
-                    <p>Feel free to explore my portfolio and get in touch!</p>
-                </div>
-            </div>
-
-            <div class="section" id="projects">
-                <h2 class="section-header">Projects</h2>
-                <div class="portfolio-item">
-                    <img src="project1-screenshot.jpg" alt="Project 1">
-                    <div>
-                        <h3>Project 1</h3>
-                        <p>Brief description of your first project.</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <img src="project2-screenshot.jpg" alt="Project 2">
-                    <div>
-                        <h3>Project 2</h3>
-                        <p>Brief description of your second project.</p>
-                    </div>
-                </div>
-                <!-- Add more portfolio items as needed -->
-            </div>
-        </div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <button onclick="openApp('dashboard')">Dashboard</button>
+    <button onclick="openApp('about')">About</button>
+    <button onclick="openApp('projects')">Projects</button>
+    <button onclick="openApp('contact')">Contact</button>
+  </aside>
+  <main class="desktop">
+    <div class="grid" id="desktopGrid"></div>
+  </main>
+</div>
+<script>
+const APPS = {
+  dashboard: {title:'Dashboard',content:'<h1>Welcome</h1><p>This is the dashboard.</p>'},
+  about: {title:'About',content:'<h1>About Me</h1><p>Some details here.</p>'},
+  projects: {title:'Projects',content:'<h1>Projects</h1><p>Project list here.</p>'},
+  contact: {title:'Contact',content:'<h1>Contact</h1><p>Email: example@example.com</p>'}
+};
+let openAppIds = [];
+function layoutGrid(){
+  const grid = document.getElementById('desktopGrid');
+  grid.innerHTML = '';
+  const count = openAppIds.length;
+  let template = '';
+  if(count === 1){ template = '1fr / 1fr'; }
+  else if(count === 2){ template = '1fr / 1fr 1fr'; }
+  else if(count === 3){ template = '1fr 1fr / 1fr 1fr'; }
+  else if(count === 4){ template = '1fr 1fr / 1fr 1fr'; }
+  else { template = 'repeat(auto-fill,minmax(300px,1fr)) / repeat(auto-fill,minmax(300px,1fr))'; }
+  grid.style.grid = template;
+  openAppIds.forEach((id, index) => {
+    const app = APPS[id];
+    const win = document.createElement('div');
+    win.className = 'window';
+    let sizeFactor = 1;
+    if(count === 1) sizeFactor = 1.4;
+    else if(count === 2) sizeFactor = 1.2;
+    else sizeFactor = 1;
+    win.innerHTML = `<div class="win-header"><span>${app.title}</span><button class="close" onclick="closeApp('${id}')">×</button></div><div class="win-body" style="font-size:${sizeFactor}rem">${app.content}</div>`;
+    grid.appendChild(win);
+  });
+}
+function openApp(id){
+  const idx = openAppIds.indexOf(id);
+  if(idx !== -1) openAppIds.splice(idx,1);
+  openAppIds.push(id);
+  updateURL();
+  layoutGrid();
+}
+function closeApp(id){
+  openAppIds = openAppIds.filter(x=>x!==id);
+  updateURL();
+  layoutGrid();
+}
+function updateURL(){
+  const params = new URLSearchParams();
+  if(openAppIds.length) params.set('apps', openAppIds.join(','));
+  history.replaceState(null,'',location.pathname + '?' + params.toString());
+}
+function init(){
+  const params = new URLSearchParams(location.search);
+  const apps = params.get('apps');
+  if(apps){ openAppIds = apps.split(','); }
+  else { openAppIds = ['dashboard']; updateURL(); }
+  layoutGrid();
+}
+init();
+</script>
+</body>
+</html>
