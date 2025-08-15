@@ -1,409 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Turquoise OS — Portfolio</title>
-  <meta name="description" content="A dark-mode turquoise portfolio that behaves like a mini OS with tiling apps and shareable URLs." />
-  <style>
-    :root{
-      --bg: #0b1014;            /* deep charcoal */
-      --panel: #11181f;         /* dark blue-gray */
-      --panel-2: #0e141a;       /* slightly darker */
-      --accent: #2bd4c7;        /* turquoise */
-      --accent-2: #16a295;      /* darker turquoise */
-      --text: #e6f1f0;          /* near-white */
-      --muted: #94a3b8;         /* slate */
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 16px;
-      --radius-sm: 12px;
-      --gap: 14px;
-    }
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
-    body{
-      margin: 0;
-      background: linear-gradient(180deg, var(--bg) 0%, #070a0d 100%);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
-      letter-spacing: .1px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubuntu Web Desktop - Dynamic Apps</title>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: #222;
+        color: #fff;
+        font-family: sans-serif;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
     }
 
-    /* Layout */
-    .app-shell{ display: grid; grid-template-columns: 280px 1fr; height: 100%; }
-    .sidebar{
-      background: radial-gradient(1200px 300px at -200px -200px, rgba(43,212,199,.18), transparent 60%), var(--panel);
-      border-right: 1px solid rgba(255,255,255,.06);
-      padding: 20px 14px; display: flex; flex-direction: column; gap: 18px;
-    }
-    .brand{ display:flex; align-items:center; gap:12px; padding:6px 8px; border-radius: var(--radius-sm); }
-    .brand .logo{ width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: inset 0 0 12px rgba(0,0,0,.3); }
-    .brand .name{ font-weight: 700; letter-spacing: .3px; }
-    .brand .sub{ color: var(--muted); font-size: 12px; }
-
-    .search{ position: relative; }
-    .search input{
-      width: 100%; padding: 10px 12px 10px 36px; border-radius: 12px; border: 1px solid rgba(255,255,255,.06);
-      background: var(--panel-2); color: var(--text); outline: none;
-    }
-    .search .icon{ position:absolute; left:10px; top:50%; transform: translateY(-50%); opacity:.6; }
-
-    .sidebar-section{ display:flex; flex-direction: column; gap: 10px; }
-    .section-title{ font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); padding: 0 8px; }
-
-    .app-list{ display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .app-btn{
-      display:flex; align-items:center; gap: 12px; padding: 10px 12px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.06); background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.0));
-      color: var(--text); cursor: pointer; user-select: none; transition: transform .04s ease, border-color .2s ease, background .2s ease;
-    }
-    .app-btn:hover{ border-color: rgba(43,212,199,.45); background: linear-gradient(180deg, rgba(43,212,199,.08), rgba(43,212,199,.02)); }
-    .app-btn:active{ transform: translateY(1px); }
-    .app-btn .ico{ width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, rgba(43,212,199,.3), rgba(43,212,199,.05)); display:grid; place-items:center; font-size:14px; color: var(--accent);
-      border: 1px solid rgba(255,255,255,.06);
-    }
-    .app-btn .label{ font-weight: 600; }
-    .app-btn .hint{ margin-left: auto; color: var(--muted); font-size: 12px; }
-
-    .sidebar-footer{ margin-top:auto; display:flex; gap: 10px; align-items:center; padding: 8px; border-top: 1px solid rgba(255,255,255,.06); }
-    .pill{
-      padding: 8px 10px; background: var(--panel-2); border: 1px solid rgba(255,255,255,.06); border-radius: 999px; color: var(--muted); font-size: 12px;
-    }
-    .share-btn{ margin-left:auto; padding: 8px 12px; border-radius: 999px; background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #001314; font-weight: 700; border: none; cursor: pointer; box-shadow: var(--shadow);
+    #desktop {
+        display: flex;
+        height: 100%;
+        width: 100%;
     }
 
-    /* Main grid for tiling windows */
-    .desktop{
-      position: relative; height: 100%; padding: var(--gap); overflow: auto; background:
-        radial-gradient(800px 500px at 80% -50px, rgba(43,212,199,.08), transparent 60%),
-        radial-gradient(1000px 300px at -100px 100%, rgba(43,212,199,.06), transparent 60%);
+    /* Sidebar */
+    #sidebar {
+        width: 60px;
+        background: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0;
+        box-sizing: border-box;
     }
 
-    .grid{
-      display: grid; gap: var(--gap); grid-auto-flow: dense;
-      /* Responsive tile sizing */
-      grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
-      grid-auto-rows: 180px; /* base row height */
+    #sidebar button {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: transform 0.2s;
     }
 
-    .window{
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.0));
-      border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius);
-      box-shadow: var(--shadow); overflow: hidden; display:flex; flex-direction: column; min-width: 0;
-      transition: border-color .2s ease, transform .08s ease;
+    #sidebar button:hover {
+        transform: scale(1.2);
     }
-    .window:hover{ border-color: rgba(43,212,199,.35); }
 
-    .win-header{
-      display:flex; align-items:center; gap:10px; padding: 10px 12px; background: linear-gradient(180deg, rgba(43,212,199,.08), rgba(43,212,199,.02)); border-bottom: 1px solid rgba(255,255,255,.06);
+    /* Main workspace */
+    #main {
+        flex: 1;
+        display: grid;
+        width: 100%;
+        height: 100%;
+        gap: 10px;
+        padding: 10px;
+        box-sizing: border-box;
     }
-    .dot{ width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(43,212,199,.6) inset; }
-    .title{ font-weight: 700; letter-spacing: .2px; }
-    .spacer{ flex: 1; }
-    .close{
-      width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.02);
-      color: var(--text); cursor: pointer; display:grid; place-items:center; font-weight: 900;
+
+    /* App windows */
+    .app-window {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid #0ff;
+        border-radius: 8px;
+        padding: 1rem;
+        overflow: auto;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
     }
-    .close:hover{ background: rgba(235,77,61,.15); border-color: rgba(235,77,61,.35); }
 
-    .win-body{ padding: 12px; overflow: auto; }
-    .muted{ color: var(--muted); }
-
-    /* Size helpers: each unit equals one auto-row (180px) */
-    .h-1{ grid-row: span 1; }
-    .h-2{ grid-row: span 2; }
-    .h-3{ grid-row: span 3; }
-
-    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); }
-
-    a.link{ color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(43,212,199,.6); }
-    a.link:hover{ opacity:.85; }
-
-    @media (max-width: 940px){
-      .app-shell{ grid-template-columns: 84px 1fr; }
-      .brand .name, .brand .sub, .hint, .search{ display:none; }
-      .app-btn{ justify-content:center; }
-      .app-btn .label{ display:none; }
-      .sidebar{ padding: 16px 10px; }
+    .app-window * {
+        max-width: 100%;
     }
-  </style>
+
+    .app-window img {
+        width: 100%;
+        height: auto;
+    }
+
+    .app-window h1, .app-window h2, .app-window p {
+        margin: 0.5em 0;
+    }
+
+    .close-btn {
+        align-self: flex-end;
+        background: #ff4444;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .close-btn:hover {
+        background: #ff0000;
+    }
+</style>
 </head>
 <body>
-  <div class="app-shell" role="application" aria-label="Turquoise OS Portfolio">
-    <!-- Sidebar -->
-    <aside class="sidebar" aria-label="Sidebar">
-      <div class="brand" aria-label="Brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <div class="name">Your Name</div>
-          <div class="sub">Portfolio OS</div>
-        </div>
-      </div>
-
-      <div class="search" aria-hidden="true">
-        <span class="icon">🔎</span>
-        <input placeholder="Search apps… (filter)" id="searchApps" />
-      </div>
-
-      <div class="sidebar-section">
-        <div class="section-title">Apps</div>
-        <div class="app-list" id="appList" role="menubar" aria-label="App launcher"></div>
-      </div>
-
-      <div class="sidebar-footer">
-        <span class="pill" title="Theme">◐ Dark Turquoise</span>
-        <button class="share-btn" id="shareBtn" title="Copy shareable link">Share</button>
-      </div>
-    </aside>
-
-    <!-- Desktop / tiling grid -->
-    <main class="desktop">
-      <div class="grid" id="desktopGrid" aria-live="polite" aria-label="Tiling windows area"></div>
-    </main>
-  </div>
+<div id="desktop">
+    <div id="sidebar">
+        <button onclick="openApp('Notes')">📝</button>
+        <button onclick="openApp('Browser')">🌐</button>
+        <button onclick="openApp('Gallery')">🖼️</button>
+        <button onclick="openApp('Terminal')">💻</button>
+    </div>
+    <div id="main"></div>
+</div>
 
 <script>
-(function(){
-  // ---- App Registry -------------------------------------------------------
-  // Define your apps here. Each app gets: id, title, size (1..3), and renderer.
-  const APPS = [
-    {
-      id: 'dashboard',
-      title: 'Launchpad / Dashboard',
-      size: 2,
-      icon: '🚀',
-      render: () => `
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-          <div class="card">
-            <h3>Welcome</h3>
-            <p class="muted">This portfolio behaves like a tiny OS. Open apps from the left to tile them here. Close with the ×. Share the exact layout with the <strong>Share</strong> button.</p>
-          </div>
-          <div class="card">
-            <h3>Quick Actions</h3>
-            <ul>
-              <li>Open <span class="kbd">About</span>, <span class="kbd">Projects</span>, <span class="kbd">Contact</span></li>
-              <li>Try reordering by closing & re-opening apps</li>
-              <li>Share your layout: copies a URL like <span class="kbd">?apps=dashboard,projects,about</span></li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Status</h3>
-            <p class="muted">All static — HTML, CSS, and JS only. Perfect for GitHub Pages.</p>
-          </div>
-          <div class="card">
-            <h3>Keyboard Tips</h3>
-            <p>Use the sidebar buttons (they're real <em>button</em> elements) — fully focusable.<br/>
-            Close windows with <span class="kbd">Enter</span> on the × button.</p>
-          </div>
-        </div>
-      `
-    },
-    {
-      id: 'about',
-      title: 'About',
-      size: 1,
-      icon: '👤',
-      render: () => `
-        <p>Hi, I’m <strong>Your Name</strong> — a mechanical engineering student and developer who enjoys web apps, Android, and building cool tools. I love clean UI, dark mode, and turquoise accents.</p>
-        <p class="muted">Replace this with your story, highlights, and a friendly headshot.</p>
-      `
-    },
-    {
-      id: 'projects',
-      title: 'Projects',
-      size: 2,
-      icon: '🧩',
-      render: () => `
-        <ul style="display:grid; gap:10px; padding-left: 18px;">
-          <li><strong>Overhead Flight Tracker</strong> — A progressive web app for old Android phones, visualizing nearby planes with a cyber aesthetic.</li>
-          <li><strong>Ubuntu Web Desktop</strong> — A web-based desktop concept with terminal-like app launching.</li>
-          <li><strong>Cyberdeck Build</strong> — Modular portable workstation project.</li>
-        </ul>
-        <p class="muted">Add links and screenshots here.</p>
-      `
-    },
-    {
-      id: 'resume',
-      title: 'Résumé',
-      size: 1,
-      icon: '📄',
-      render: () => `
-        <p>Drop a PDF link or inline résumé here.
-        <br>Example: <a class="link" href="#" onclick="alert('Replace with your resume link!')">Download Résumé (PDF)</a></p>
-        <ul>
-          <li><strong>Skills:</strong> HTML, CSS, JS, Python (basics), Android, UI design</li>
-          <li><strong>Interests:</strong> Skateboarding, rock climbing, small computers</li>
-        </ul>
-      `
-    },
-    {
-      id: 'contact',
-      title: 'Contact',
-      size: 1,
-      icon: '✉️',
-      render: () => `
-        <p>Let’s talk!</p>
-        <ul>
-          <li>Email: <a class="link" href="mailto:you@example.com">you@example.com</a></li>
-          <li>GitHub: <a class="link" href="https://github.com/yourhandle" target="_blank" rel="noopener">@yourhandle</a></li>
-          <li>LinkedIn: <a class="link" href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener">/in/yourhandle</a></li>
-        </ul>
-      `
-    },
-    {
-      id: 'blog',
-      title: 'Blog',
-      size: 2,
-      icon: '📝',
-      render: () => `
-        <article>
-          <h3>Latest Post</h3>
-          <p class="muted">This is a placeholder. Convert this to a static blog later — or fetch markdown files at build time with a static site generator.</p>
-        </article>
-      `
-    }
-  ];
+let appCount = 0;
 
-  // Utility: map for quick lookup
-  const APP_MAP = Object.fromEntries(APPS.map(a => [a.id, a]));
-
-  // ---- DOM refs -----------------------------------------------------------
-  const grid = document.getElementById('desktopGrid');
-  const appList = document.getElementById('appList');
-  const shareBtn = document.getElementById('shareBtn');
-  const searchInput = document.getElementById('searchApps');
-
-  // ---- URL State ----------------------------------------------------------
-  function getAppsFromURL(){
-    const params = new URLSearchParams(location.search);
-    const raw = params.get('apps');
-    if(!raw) return null; // null indicates no explicit state
-    const ids = raw.split(',').map(s=>s.trim()).filter(Boolean);
-    return ids.filter(id => APP_MAP[id]);
-  }
-  function setAppsInURL(ids){
-    const params = new URLSearchParams(location.search);
-    if(ids.length){ params.set('apps', ids.join(',')); }
-    else { params.delete('apps'); }
-    history.replaceState(null, '', `${location.pathname}?${params.toString()}`);
-  }
-
-  // ---- Rendering ----------------------------------------------------------
-  function makeWindow(app){
-    const el = document.createElement('section');
-    el.className = `window h-${Math.max(1, Math.min(3, app.size||1))}`;
-    el.dataset.appId = app.id;
-    el.setAttribute('role', 'region');
-    el.setAttribute('aria-label', `${app.title} window`);
-    el.innerHTML = `
-      <header class="win-header">
-        <span class="dot" aria-hidden="true"></span>
-        <div class="title">${app.title}</div>
-        <div class="spacer"></div>
-        <button class="close" title="Close ${app.title}" aria-label="Close ${app.title}" data-action="close">×</button>
-      </header>
-      <div class="win-body">${app.render()}</div>
+function openApp(name) {
+    const main = document.getElementById('main');
+    const app = document.createElement('div');
+    app.className = 'app-window';
+    app.dataset.openTime = Date.now();
+    app.innerHTML = `
+        <button class="close-btn" onclick="closeApp(this)">X</button>
+        <h1>${name}</h1>
+        <p>Sample content for ${name}.</p>
+        <img src="https://via.placeholder.com/400x200?text=${encodeURIComponent(name)}" alt="${name}">
     `;
-    el.querySelector('[data-action="close"]').addEventListener('click', () => closeApp(app.id));
-    return el;
-  }
+    main.appendChild(app);
+    arrangeWindows();
+}
 
-  function renderWindows(openIds){
-    grid.innerHTML = '';
-    openIds.forEach(id => grid.appendChild(makeWindow(APP_MAP[id])));
-  }
+function closeApp(btn) {
+    const app = btn.parentElement;
+    app.remove();
+    arrangeWindows();
+}
 
-  function renderLauncher(filter=''){
-    const q = filter.trim().toLowerCase();
-    appList.innerHTML = '';
-    APPS.filter(a => a.title.toLowerCase().includes(q) || a.id.includes(q)).forEach(app => {
-      const btn = document.createElement('button');
-      btn.className = 'app-btn';
-      btn.setAttribute('role', 'menuitem');
-      btn.setAttribute('aria-label', `Open ${app.title}`);
-      btn.dataset.appId = app.id;
-      btn.innerHTML = `<span class="ico" aria-hidden="true">${app.icon || '🗔'}</span><span class="label">${app.title}</span><span class="hint">${app.id}</span>`;
-      btn.addEventListener('click', () => openApp(app.id));
-      appList.appendChild(btn);
+function arrangeWindows() {
+    const main = document.getElementById('main');
+    const apps = Array.from(main.children);
+    const count = apps.length;
+
+    if (count === 0) {
+        main.style.gridTemplateColumns = '';
+        main.style.gridTemplateRows = '';
+        return;
+    }
+
+    if (count === 1) {
+        main.style.gridTemplateColumns = '1fr';
+        main.style.gridTemplateRows = '1fr';
+    } else if (count === 2) {
+        main.style.gridTemplateColumns = '1fr 1fr';
+        main.style.gridTemplateRows = '1fr';
+    } else if (count === 3) {
+        // Most recent gets top row
+        const mostRecent = apps.sort((a, b) => b.dataset.openTime - a.dataset.openTime)[0];
+        apps.forEach(app => {
+            app.style.gridColumn = '';
+            app.style.gridRow = '';
+        });
+        main.style.gridTemplateColumns = '1fr 1fr';
+        main.style.gridTemplateRows = '2fr 1fr';
+        mostRecent.style.gridColumn = '1 / span 2';
+        mostRecent.style.gridRow = '1';
+    } else {
+        const cols = Math.ceil(Math.sqrt(count));
+        const rows = Math.ceil(count / cols);
+        main.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        main.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        apps.forEach(app => {
+            app.style.gridColumn = '';
+            app.style.gridRow = '';
+        });
+    }
+
+    scaleContent(apps);
+}
+
+function scaleContent(apps) {
+    apps.forEach(app => {
+        const rect = app.getBoundingClientRect();
+        const baseSize = Math.min(rect.width, rect.height) / 20;
+        app.style.fontSize = `${baseSize}px`;
     });
-  }
+}
 
-  // ---- State management ---------------------------------------------------
-  let openAppIds = [];
-
-  function sync(){
-    renderWindows(openAppIds);
-    setAppsInURL(openAppIds);
-  }
-
-  function openApp(id){
-    if(!APP_MAP[id]) return;
-    if(!openAppIds.includes(id)) {
-      openAppIds.push(id);
-      sync();
-    }
-  }
-
-  function closeApp(id){
-    openAppIds = openAppIds.filter(x => x !== id);
-    sync();
-  }
-
-  // Handle browser navigation to keep layout in sync
-  window.addEventListener('popstate', () => {
-    const fromURL = getAppsFromURL();
-    if(fromURL) {
-      openAppIds = fromURL;
-    } else {
-      openAppIds = ['dashboard'];
-    }
-    renderWindows(openAppIds);
-  });
-
-  // ---- Share button -------------------------------------------------------
-  shareBtn.addEventListener('click', async () => {
-    // Force latest state into URL before copying
-    setAppsInURL(openAppIds);
-    const url = location.href;
-    try{
-      await navigator.clipboard.writeText(url);
-      shareBtn.textContent = 'Copied!';
-      setTimeout(()=> shareBtn.textContent = 'Share', 1200);
-    }catch(err){
-      // Fallback prompt
-      window.prompt('Copy this URL', url);
-    }
-  });
-
-  // ---- Search filter ------------------------------------------------------
-  searchInput.addEventListener('input', (e)=>{
-    renderLauncher(e.target.value);
-  });
-
-  // ---- Init ---------------------------------------------------------------
-  (function init(){
-    renderLauncher();
-    const fromURL = getAppsFromURL();
-    if(fromURL){
-      openAppIds = fromURL;
-    } else {
-      // default: Launchpad/Dashboard open
-      openAppIds = ['dashboard'];
-      setAppsInURL(openAppIds);
-    }
-    renderWindows(openAppIds);
-  })();
-
-  // ---- Small helper styles injected via JS for component cards ------------
-  const css = document.createElement('style');
-  css.textContent = `
-    .card{ padding:12px; border: 1px solid rgba(255,255,255,.06); border-radius: 12px; background: rgba(255,255,255,.02); }
-    .card h3{ margin: 0 0 6px 0; font-size: 16px; }
-    h3{ margin: 0 0 6px 0; }
-  `;
-  document.head.appendChild(css);
-})();
+window.addEventListener('resize', () => arrangeWindows());
 </script>
 </body>
 </html>
