@@ -1,189 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ubuntu Web Desktop - Dynamic Apps</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Turquoise OS — Portfolio</title>
 <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: #222;
-        color: #fff;
-        font-family: sans-serif;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-    }
-
-    #desktop {
-        display: flex;
-        height: 100%;
-        width: 100%;
-    }
-
-    /* Sidebar */
-    #sidebar {
-        width: 60px;
-        background: #333;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 10px 0;
-        box-sizing: border-box;
-    }
-
-    #sidebar button {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 24px;
-        margin: 10px 0;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-
-    #sidebar button:hover {
-        transform: scale(1.2);
-    }
-
-    /* Main workspace */
-    #main {
-        flex: 1;
-        display: grid;
-        width: 100%;
-        height: 100%;
-        gap: 10px;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-
-    /* App windows */
-    .app-window {
-        background: rgba(0, 0, 0, 0.7);
-        border: 1px solid #0ff;
-        border-radius: 8px;
-        padding: 1rem;
-        overflow: auto;
-        color: #fff;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .app-window * {
-        max-width: 100%;
-    }
-
-    .app-window img {
-        width: 100%;
-        height: auto;
-    }
-
-    .app-window h1, .app-window h2, .app-window p {
-        margin: 0.5em 0;
-    }
-
-    .close-btn {
-        align-self: flex-end;
-        background: #ff4444;
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .close-btn:hover {
-        background: #ff0000;
-    }
+  :root{
+    --bg: #0b1014;
+    --panel: #11181f;
+    --accent: #2bd4c7;
+    --text: #e6f1f0;
+    --muted: #94a3b8;
+    --gap: 14px;
+  }
+  *{ box-sizing: border-box; }
+  html, body{ height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: sans-serif; }
+  .app-shell{ display: grid; grid-template-columns: 280px 1fr; height: 100%; }
+  .sidebar{ background: var(--panel); padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+  .desktop{ position: relative; height: 100%; padding: var(--gap); overflow: auto; }
+  .grid{ display: grid; gap: var(--gap); height: 100%; }
+  .window{ background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.06); border-radius: 8px; display:flex; flex-direction: column; }
+  .win-header{ display:flex; align-items:center; justify-content:space-between; padding: 8px; background: rgba(43,212,199,.08); }
+  .win-body{ flex:1; padding: 12px; overflow:auto; font-size: 1rem; }
+  .win-body img{ max-width: 100%; height: auto; }
+  .close{ background:none; border:none; color:var(--text); font-size: 1.2rem; cursor:pointer; }
 </style>
 </head>
 <body>
-<div id="desktop">
-    <div id="sidebar">
-        <button onclick="openApp('Notes')">📝</button>
-        <button onclick="openApp('Browser')">🌐</button>
-        <button onclick="openApp('Gallery')">🖼️</button>
-        <button onclick="openApp('Terminal')">💻</button>
-    </div>
-    <div id="main"></div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <button onclick="openApp('dashboard')">Dashboard</button>
+    <button onclick="openApp('about')">About</button>
+    <button onclick="openApp('projects')">Projects</button>
+    <button onclick="openApp('contact')">Contact</button>
+  </aside>
+  <main class="desktop">
+    <div class="grid" id="desktopGrid"></div>
+  </main>
 </div>
-
 <script>
-let appCount = 0;
-
-function openApp(name) {
-    const main = document.getElementById('main');
-    const app = document.createElement('div');
-    app.className = 'app-window';
-    app.dataset.openTime = Date.now();
-    app.innerHTML = `
-        <button class="close-btn" onclick="closeApp(this)">X</button>
-        <h1>${name}</h1>
-        <p>Sample content for ${name}.</p>
-        <img src="https://via.placeholder.com/400x200?text=${encodeURIComponent(name)}" alt="${name}">
-    `;
-    main.appendChild(app);
-    arrangeWindows();
+const APPS = {
+  dashboard: {title:'Dashboard',content:'<h1>Welcome</h1><p>This is the dashboard.</p>'},
+  about: {title:'About',content:'<h1>About Me</h1><p>Some details here.</p>'},
+  projects: {title:'Projects',content:'<h1>Projects</h1><p>Project list here.</p>'},
+  contact: {title:'Contact',content:'<h1>Contact</h1><p>Email: example@example.com</p>'}
+};
+let openAppIds = [];
+function layoutGrid(){
+  const grid = document.getElementById('desktopGrid');
+  grid.innerHTML = '';
+  const count = openAppIds.length;
+  let template = '';
+  if(count === 1){ template = '1fr / 1fr'; }
+  else if(count === 2){ template = '1fr / 1fr 1fr'; }
+  else if(count === 3){ template = '1fr 1fr / 1fr 1fr'; }
+  else if(count === 4){ template = '1fr 1fr / 1fr 1fr'; }
+  else { template = 'repeat(auto-fill,minmax(300px,1fr)) / repeat(auto-fill,minmax(300px,1fr))'; }
+  grid.style.grid = template;
+  openAppIds.forEach((id, index) => {
+    const app = APPS[id];
+    const win = document.createElement('div');
+    win.className = 'window';
+    let sizeFactor = 1;
+    if(count === 1) sizeFactor = 1.4;
+    else if(count === 2) sizeFactor = 1.2;
+    else sizeFactor = 1;
+    win.innerHTML = `<div class="win-header"><span>${app.title}</span><button class="close" onclick="closeApp('${id}')">×</button></div><div class="win-body" style="font-size:${sizeFactor}rem">${app.content}</div>`;
+    grid.appendChild(win);
+  });
 }
-
-function closeApp(btn) {
-    const app = btn.parentElement;
-    app.remove();
-    arrangeWindows();
+function openApp(id){
+  const idx = openAppIds.indexOf(id);
+  if(idx !== -1) openAppIds.splice(idx,1);
+  openAppIds.push(id);
+  updateURL();
+  layoutGrid();
 }
-
-function arrangeWindows() {
-    const main = document.getElementById('main');
-    const apps = Array.from(main.children);
-    const count = apps.length;
-
-    if (count === 0) {
-        main.style.gridTemplateColumns = '';
-        main.style.gridTemplateRows = '';
-        return;
-    }
-
-    if (count === 1) {
-        main.style.gridTemplateColumns = '1fr';
-        main.style.gridTemplateRows = '1fr';
-    } else if (count === 2) {
-        main.style.gridTemplateColumns = '1fr 1fr';
-        main.style.gridTemplateRows = '1fr';
-    } else if (count === 3) {
-        // Most recent gets top row
-        const mostRecent = apps.sort((a, b) => b.dataset.openTime - a.dataset.openTime)[0];
-        apps.forEach(app => {
-            app.style.gridColumn = '';
-            app.style.gridRow = '';
-        });
-        main.style.gridTemplateColumns = '1fr 1fr';
-        main.style.gridTemplateRows = '2fr 1fr';
-        mostRecent.style.gridColumn = '1 / span 2';
-        mostRecent.style.gridRow = '1';
-    } else {
-        const cols = Math.ceil(Math.sqrt(count));
-        const rows = Math.ceil(count / cols);
-        main.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        main.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-        apps.forEach(app => {
-            app.style.gridColumn = '';
-            app.style.gridRow = '';
-        });
-    }
-
-    scaleContent(apps);
+function closeApp(id){
+  openAppIds = openAppIds.filter(x=>x!==id);
+  updateURL();
+  layoutGrid();
 }
-
-function scaleContent(apps) {
-    apps.forEach(app => {
-        const rect = app.getBoundingClientRect();
-        const baseSize = Math.min(rect.width, rect.height) / 20;
-        app.style.fontSize = `${baseSize}px`;
-    });
+function updateURL(){
+  const params = new URLSearchParams();
+  if(openAppIds.length) params.set('apps', openAppIds.join(','));
+  history.replaceState(null,'',location.pathname + '?' + params.toString());
 }
-
-window.addEventListener('resize', () => arrangeWindows());
+function init(){
+  const params = new URLSearchParams(location.search);
+  const apps = params.get('apps');
+  if(apps){ openAppIds = apps.split(','); }
+  else { openAppIds = ['dashboard']; updateURL(); }
+  layoutGrid();
+}
+init();
 </script>
 </body>
 </html>
