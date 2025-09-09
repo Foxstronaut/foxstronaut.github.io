@@ -1,0 +1,14 @@
+.body {
+background-color:black;
+color:white;
+}
+.flexbox {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+}
+.items {
+    margin: 20vh;
+    outline: 0.2vh double white;
+    outline-offset: 17vh;
+}
