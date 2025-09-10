@@ -8,7 +8,11 @@ color:white;
     align-items: center;     /* Centers vertically */
 }
 .items {
-    margin: 20vh;
+    margin: 10vh;
     outline: 0.2vh double white;
-    outline-offset: 17vh;
+    outline-offset: 8vh;
+}
+.navbar {
+    margin: 1vh;
+    outline-offset: 0.5vh;
 }
